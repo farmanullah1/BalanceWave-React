@@ -1,0 +1,72 @@
+/* BalanceWave - Global Styles */
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap');
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg: #E8EEF5;
+  --surface: rgba(255, 255, 255, 0.6);
+  --border: rgba(255, 255, 255, 0.85);
+  --text: #1A2540;
+  --muted: #5E6E8A;
+  --accent: #00B4D8;
+  --wave: #0077B6;
+  --glow: #48CAE4;
+  --success: #06D6A0;
+  --danger: #F72585;
+  --sdark: #BDC8DA;
+  --slight: #F5F9FF;
+}
+
+[data-theme="dark"] {
+  --bg: #0A1628;
+  --surface: rgba(16, 30, 58, 0.7);
+  --border: rgba(255, 255, 255, 0.07);
+  --text: #E8F1FF;
+  --muted: #7A90B5;
+  --accent: #48CAE4;
+  --wave: #00B4D8;
+  --glow: #90E0EF;
+  --success: #06D6A0;
+  --danger: #F72585;
+  --sdark: #040D1E;
+  --slight: #1A2E52;
+}
+
+html {
+  transition: background 0.4s, color 0.4s;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+/* Animations */
+@keyframes drift {
+  0%   { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(6vw, 7vh) scale(1.12); }
+}
+
+@keyframes wavebar {
+  0%, 100% { transform: scaleY(0.6); opacity: 0.5; }
+  50%       { transform: scaleY(1.2); opacity: 1; }
+}
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
