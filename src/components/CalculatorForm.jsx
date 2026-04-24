@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { detectCarrier, CARRIER_EMOJI } from '../utils/carriers';
+import { detectCarrier } from '../utils/carriers';
+import { CarrierLogo } from '../utils/CarrierLogos';
 import './CalculatorForm.css';
 
-const CARRIERS = ['Jazz', 'Zong', 'Telenor', 'Ufone'];
+const CARRIERS = ['Jazz', 'Zong', 'Telenor', 'Ufone', 'Onic', 'SCOm'];
 const FED_TAX_RATE = 0.135;
 
 function CalculatorForm({ onCalculate }) {
@@ -109,7 +110,7 @@ function CalculatorForm({ onCalculate }) {
           <div className="carrier-wrap">
             {carrier && (
               <span className="carrier-badge">
-                {CARRIER_EMOJI[carrier] ?? '📡'} {carrier}
+                <CarrierLogo carrier={carrier} size={18} /> {carrier}
               </span>
             )}
             <select
@@ -120,7 +121,7 @@ function CalculatorForm({ onCalculate }) {
             >
               <option value="">Auto-detect or select…</option>
               {CARRIERS.map(c => (
-                <option key={c} value={c}>{CARRIER_EMOJI[c]} {c}</option>
+                <option key={c} value={c}>{c}</option>
               ))}
             </select>
           </div>

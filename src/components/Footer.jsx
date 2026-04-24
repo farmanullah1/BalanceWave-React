@@ -1,5 +1,5 @@
 import React from 'react';
-import { Briefcase } from 'lucide-react';
+import { Briefcase, ArrowUp, Code, Mail } from 'lucide-react';
 import './Footer.css';
 
 const GithubIcon = ({ size = 20 }) => (
@@ -17,41 +17,43 @@ const LinkedinIcon = ({ size = 20 }) => (
 );
 
 function Footer() {
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const currentYear = new Date().getFullYear();
+
   return (
     <footer className="app-footer">
-      <div className="footer-content">
-        <p className="footer-text">
-          Built with <span className="heart">❤️</span> by Farmanullah Ansari
-        </p>
-        <div className="footer-links">
-          <a
-            href="https://farmanullah1.github.io/My-Portfolio/"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Portfolio"
-            title="Portfolio"
-          >
-            <Briefcase size={20} />
+      <div className="footer-top">
+        <div className="footer-info">
+          <h3>BalanceWave 〰️</h3>
+          <p>Your smart & reliable mobile balance tax calculator for Pakistan. Get instant net balance calculations.</p>
+        </div>
+
+        <div className="footer-links-group">
+          <h4>Connect</h4>
+          <a href="https://farmanullah1.github.io/My-Portfolio/" target="_blank" rel="noopener noreferrer">
+            <Briefcase size={16} /> Portfolio
           </a>
-          <a
-            href="https://github.com/farmanullah1"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="GitHub"
-            title="GitHub"
-          >
-            <GithubIcon size={20} />
+          <a href="https://github.com/farmanullah1" target="_blank" rel="noopener noreferrer">
+            <GithubIcon size={16} /> GitHub
           </a>
-          <a
-            href="https://linkedin.com/in/farmanullah1"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="LinkedIn"
-            title="LinkedIn"
-          >
-            <LinkedinIcon size={20} />
+          <a href="https://linkedin.com/in/farmanullah1" target="_blank" rel="noopener noreferrer">
+            <LinkedinIcon size={16} /> LinkedIn
           </a>
         </div>
+      </div>
+
+      <div className="footer-bottom">
+        <p className="footer-text">
+          &copy; {currentYear} BalanceWave. Built with <span className="heart">❤️</span> by Farmanullah Ansari.
+        </p>
+
+        <button className="back-to-top" onClick={scrollToTop} aria-label="Back to top">
+          <ArrowUp size={18} />
+          <span>Top</span>
+        </button>
       </div>
     </footer>
   );

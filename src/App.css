@@ -58,7 +58,11 @@
 }
 @media (max-width: 700px) {
   .grid { grid-template-columns: 1fr; }
-  .page { padding: 1.5rem 1rem; }
+  .page { padding: 1rem 0.8rem; }
+  .glass-card { 
+    padding: 1.5rem 1.2rem; 
+    border-radius: 18px; 
+  }
 }
 
 /* ── Glass card ── */
@@ -128,8 +132,20 @@
   justify-content: space-between;
   font-size: 0.85rem;
   transition: transform 0.2s ease;
+  min-height: 50px;
 }
 .history-item:hover { transform: translateX(4px); }
+@media (max-width: 700px) {
+  .history-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
+  }
+  .history-net {
+    align-self: flex-end;
+    font-size: 1.1rem;
+  }
+}
 .history-left { display: flex; flex-direction: column; gap: 2px; }
 .history-carrier {
   font-family: 'Syne', sans-serif;
