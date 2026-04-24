@@ -3,6 +3,7 @@ import Navbar from './components/Navbar';
 import HeroCard from './components/HeroCard';
 import CalculatorForm from './components/CalculatorForm';
 import ResultCard from './components/ResultCard';
+import Footer from './components/Footer';
 import './App.css';
 
 const MAX_HISTORY = 8;
@@ -124,6 +125,7 @@ function App() {
           </section>
         )}
       </main>
+      <Footer />
     </div>
   );
 }

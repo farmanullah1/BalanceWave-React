@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Palette, Moon, Sun, Briefcase } from 'lucide-react';
 import './Navbar.css';
 
 const SKINS = [
@@ -29,7 +30,7 @@ function Navbar({ theme, onToggleTheme, skin, onChangeSkin }) {
             className="portfolio-link"
             title="Farmanullah's Portfolio"
           >
-            <span className="port-icon">🎨</span>
+            <span className="port-icon"><Briefcase size={16} /></span>
             <span className="port-text">Portfolio</span>
           </a>
 
@@ -41,7 +42,7 @@ function Navbar({ theme, onToggleTheme, skin, onChangeSkin }) {
               title="Change color theme"
               aria-expanded={skinOpen}
             >
-              🎨
+              <Palette size={18} />
             </button>
             {skinOpen && (
               <div className="skin-panel" role="menu">
@@ -66,7 +67,7 @@ function Navbar({ theme, onToggleTheme, skin, onChangeSkin }) {
             title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
             aria-label="Toggle theme"
           >
-            {theme === 'dark' ? '☀️' : '🌙'}
+            {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
           </button>
         </div>
       </div>

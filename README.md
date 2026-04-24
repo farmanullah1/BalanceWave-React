@@ -20,6 +20,7 @@
 | **Copy to Clipboard** | One-tap copy with haptic feedback on mobile |
 | **Skeleton Loader** | Smooth UX with loading animation |
 | **Animated Waves** | Background blobs + animated wave ribbon |
+| **SEO Optimised** | OpenGraph tags, modern metadata |
 | **Fully Responsive** | Mobile, tablet, desktop |
 
 ---
@@ -100,7 +101,8 @@ balancewave/
         ├── Navbar.jsx / .css       # Logo, portfolio link, skin & theme toggles
         ├── HeroCard.jsx / .css     # Title, subtitle, animated bars
         ├── CalculatorForm.jsx/.css # Input form, mode toggle
-        └── ResultCard.jsx / .css  # Skeleton, empty state, result breakdown
+        ├── ResultCard.jsx / .css   # Skeleton, empty state, result breakdown
+        └── Footer.jsx / .css       # Social links and portfolio integrations
 ```
 
 ---
