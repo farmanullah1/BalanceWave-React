@@ -17,7 +17,19 @@ function Navbar({ theme, onToggleTheme, skin, onChangeSkin }) {
       <div className="navbar-inner">
         {/* Brand */}
         <a href="/" className="brand" aria-label="BalanceWave home">
-          BalanceWave
+          <svg className="brand-logo" viewBox="0 0 100 100" width="28" height="28" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="navGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="var(--grad-from)" />
+                <stop offset="100%" stopColor="var(--grad-to)" />
+              </linearGradient>
+            </defs>
+            <rect width="100" height="100" rx="20" fill="url(#navGrad)" />
+            <path d="M10 55 Q 30 25, 50 55 T 90 55" fill="none" stroke="white" strokeWidth="8" strokeLinecap="round" />
+            <path d="M10 70 Q 30 40, 50 70 T 90 70" fill="none" stroke="rgba(255,255,255,0.6)" strokeWidth="8" strokeLinecap="round" />
+            <circle cx="50" cy="25" r="8" fill="white" />
+          </svg>
+          <span className="brand-text">BalanceWave</span>
         </a>
 
         {/* Right-side controls */}
