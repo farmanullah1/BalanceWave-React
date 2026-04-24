@@ -1,7 +1,7 @@
 import React from 'react';
 import './HeroCard.css';
 
-const BARS = [8, 16, 22, 28, 22, 16, 8, 14, 20, 14, 8];
+const BARS = [8,14,22,28,36,28,22,14,8,16,24,16,8];
 
 function HeroCard() {
   return (
@@ -15,8 +15,10 @@ function HeroCard() {
             className="wave-bar"
             style={{
               height: `${h}px`,
-              animationDelay: `${i * 0.1}s`,
-              background: i >= 7 ? 'var(--danger)' : i === 3 ? 'var(--wave)' : 'var(--accent)',
+              animationDelay: `${i * 0.09}s`,
+              background: i === 4 ? 'var(--wave)'
+                        : i >= 9  ? 'var(--danger)'
+                        : 'var(--accent)',
             }}
           />
         ))}

@@ -1,69 +1,93 @@
 import React, { useState } from 'react';
-import { detectCarrier } from '../utils/carriers';
+import { detectCarrier, CARRIER_EMOJI } from '../utils/carriers';
 import './CalculatorForm.css';
 
 const CARRIERS = ['Jazz', 'Zong', 'Telenor', 'Ufone'];
 const FED_TAX_RATE = 0.135;
 
 function CalculatorForm({ onCalculate }) {
-  const [mobile, setMobile] = useState('');
-  const [carrier, setCarrier] = useState('');
-  const [amount, setAmount] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState({});
+  const [mobile,   setMobile]   = useState('');
+  const [carrier,  setCarrier]  = useState('');
+  const [amount,   setAmount]   = useState('');
+  const [loading,  setLoading]  = useState(false);
+  const [errors,   setErrors]   = useState({});
+  const [mode,     setMode]     = useState('forward'); // 'forward' | 'reverse'
 
+  /* ── Carrier auto-detect ── */
   const handleMobileChange = (e) => {
-    const val = e.target.value;
+    const val = e.target.value.replace(/[^0-9]/g, '').slice(0, 11);
     setMobile(val);
     const detected = detectCarrier(val);
     if (detected) setCarrier(detected);
-    if (errors.mobile) setErrors(prev => ({ ...prev, mobile: '' }));
+    if (errors.mobile) setErrors(p => ({ ...p, mobile: '' }));
   };
 
+  /* ── Validation ── */
   const validate = () => {
-    const newErrors = {};
-    if (!mobile || mobile.length !== 11 || !mobile.startsWith('0')) {
-      newErrors.mobile = 'Enter a valid 11-digit Pakistani number';
-    }
-    if (!carrier) {
-      newErrors.carrier = 'Please select or enter a valid mobile number';
+    const errs = {};
+    // Mobile is optional; but if entered it must be 11 digits
+    if (mobile && (mobile.length !== 11 || !mobile.startsWith('0'))) {
+      errs.mobile = 'Enter a valid 11-digit number (e.g. 03XXXXXXXXX)';
     }
     const amt = parseFloat(amount);
     if (!amount || isNaN(amt) || amt <= 0) {
-      newErrors.amount = 'Enter a valid recharge amount';
+      errs.amount = 'Enter a valid positive amount';
     }
-    return newErrors;
+    return errs;
   };
 
+  /* ── Submit ── */
   const handleSubmit = (e) => {
     e.preventDefault();
-    const newErrors = validate();
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
-    }
+    const errs = validate();
+    if (Object.keys(errs).length > 0) { setErrors(errs); return; }
     setErrors({});
     setLoading(true);
     if (navigator.vibrate) navigator.vibrate(50);
 
-    // Simulate calculation delay (skeleton effect)
     setTimeout(() => {
-      onCalculate({
-        mobile,
-        carrier,
-        amount: parseFloat(amount),
-        taxRate: FED_TAX_RATE,
-      });
+      const amt = parseFloat(amount);
+      const resolvedCarrier = carrier || 'Unknown';
+      if (mode === 'forward') {
+        const tax = amt * FED_TAX_RATE;
+        const net = amt - tax;
+        onCalculate({ mobile, carrier: resolvedCarrier, amount: amt, tax, net, mode: 'forward' });
+      } else {
+        // Reverse: user wants 'amt' in account — how much to recharge?
+        const required = amt / (1 - FED_TAX_RATE);
+        const tax      = required * FED_TAX_RATE;
+        onCalculate({ mobile, carrier: resolvedCarrier, amount: required, tax, net: amt, desiredNet: amt, mode: 'reverse' });
+      }
       setLoading(false);
-    }, 850);
+    }, 900);
   };
 
   return (
-    <div className="glass-card fade-in-delay">
+    <div className="glass-card fade-in-delay form-card">
+      {/* Mode toggle */}
+      <div className="mode-toggle" role="group" aria-label="Calculation mode">
+        <button
+          type="button"
+          className={`mode-btn ${mode === 'forward' ? 'active' : ''}`}
+          onClick={() => setMode('forward')}
+        >
+          ⚡ Recharge → Balance
+        </button>
+        <button
+          type="button"
+          className={`mode-btn ${mode === 'reverse' ? 'active' : ''}`}
+          onClick={() => setMode('reverse')}
+        >
+          🎯 Target Balance
+        </button>
+      </div>
+
       <form onSubmit={handleSubmit} noValidate>
-        {/* Mobile Number */}
+        {/* Mobile Number (optional) */}
         <div className="field">
-          <label className="field-label" htmlFor="mobile">Mobile Number</label>
+          <label className="field-label" htmlFor="mobile">
+            Mobile Number <span className="optional">(optional)</span>
+          </label>
           <input
             id="mobile"
             className={`neu-input ${errors.mobile ? 'input-error' : ''}`}
@@ -71,35 +95,42 @@ function CalculatorForm({ onCalculate }) {
             value={mobile}
             onChange={handleMobileChange}
             placeholder="03XXXXXXXXX"
-            maxLength={11}
             autoComplete="off"
+            inputMode="numeric"
           />
           {errors.mobile && <p className="err-msg">{errors.mobile}</p>}
         </div>
 
-        {/* Carrier */}
+        {/* Carrier (optional / auto-detected) */}
         <div className="field">
-          <label className="field-label" htmlFor="carrier">Carrier</label>
-          <select
-            id="carrier"
-            className={`neu-input ${errors.carrier ? 'input-error' : ''}`}
-            value={carrier}
-            onChange={(e) => {
-              setCarrier(e.target.value);
-              if (errors.carrier) setErrors(prev => ({ ...prev, carrier: '' }));
-            }}
-          >
-            <option value="">Auto-detect or select…</option>
-            {CARRIERS.map(c => (
-              <option key={c} value={c}>{c}</option>
-            ))}
-          </select>
-          {errors.carrier && <p className="err-msg">{errors.carrier}</p>}
+          <label className="field-label" htmlFor="carrier">
+            Carrier <span className="optional">(optional)</span>
+          </label>
+          <div className="carrier-wrap">
+            {carrier && (
+              <span className="carrier-badge">
+                {CARRIER_EMOJI[carrier] ?? '📡'} {carrier}
+              </span>
+            )}
+            <select
+              id="carrier"
+              className="neu-input carrier-select"
+              value={carrier}
+              onChange={(e) => setCarrier(e.target.value)}
+            >
+              <option value="">Auto-detect or select…</option>
+              {CARRIERS.map(c => (
+                <option key={c} value={c}>{CARRIER_EMOJI[c]} {c}</option>
+              ))}
+            </select>
+          </div>
         </div>
 
         {/* Amount */}
         <div className="field">
-          <label className="field-label" htmlFor="amount">Recharge Amount</label>
+          <label className="field-label" htmlFor="amount">
+            {mode === 'forward' ? 'Recharge Amount' : 'Desired Balance in Account'}
+          </label>
           <div className="amt-wrap">
             <span className="amt-prefix">Rs.</span>
             <input
@@ -107,15 +138,22 @@ function CalculatorForm({ onCalculate }) {
               className={`neu-input amt-input ${errors.amount ? 'input-error' : ''}`}
               type="number"
               min="1"
+              step="0.01"
               value={amount}
               onChange={(e) => {
                 setAmount(e.target.value);
-                if (errors.amount) setErrors(prev => ({ ...prev, amount: '' }));
+                if (errors.amount) setErrors(p => ({ ...p, amount: '' }));
               }}
-              placeholder="100"
+              placeholder={mode === 'forward' ? '100' : '86.5'}
+              inputMode="decimal"
             />
           </div>
           {errors.amount && <p className="err-msg">{errors.amount}</p>}
+          {mode === 'reverse' && (
+            <p className="hint-msg">
+              We'll calculate the recharge needed to get this amount after 13.5% FED tax.
+            </p>
+          )}
         </div>
 
         <button
@@ -123,7 +161,12 @@ function CalculatorForm({ onCalculate }) {
           className={`calc-btn ${loading ? 'loading' : ''}`}
           disabled={loading}
         >
-          {loading ? 'Processing…' : '⚡ Calculate Balance'}
+          {loading
+            ? <span className="loading-dots">Processing<span>.</span><span>.</span><span>.</span></span>
+            : mode === 'forward'
+              ? '⚡ Calculate Balance'
+              : '🎯 Calculate Recharge'
+          }
         </button>
       </form>
     </div>

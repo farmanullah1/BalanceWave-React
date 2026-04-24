@@ -1,23 +1,26 @@
 import React, { useState, useEffect } from 'react';
+import { CARRIER_EMOJI } from '../utils/carriers';
 import './ResultCard.css';
 
+/* ── Skeleton ── */
 function Skeleton() {
   return (
     <div className="skeleton-wrap">
-      <div className="skel" style={{ width: '45%', height: '18px' }} />
-      <div className="skel" style={{ width: '70%', height: '56px', marginTop: '8px' }} />
-      <div className="skel" style={{ width: '100%', height: '90px', marginTop: '20px' }} />
+      <div className="skel" style={{ width: '45%', height: '14px' }} />
+      <div className="skel" style={{ width: '68%', height: '52px', marginTop: '10px' }} />
+      <div className="skel" style={{ width: '100%', height: '100px', marginTop: '22px' }} />
     </div>
   );
 }
 
+/* ── Empty state ── */
 function EmptyState() {
-  const bars = [15, 28, 40, 28, 15, 22, 36];
+  const bars = [14, 26, 38, 26, 14, 20, 32, 20];
   return (
     <div className="empty-state">
       <div className="wave-visual" aria-hidden="true">
         {bars.map((h, i) => (
-          <div key={i} className="wv-bar" style={{ height: `${h}px` }} />
+          <div key={i} className="wv-bar" style={{ height: `${h}px`, animationDelay: `${i*0.1}s` }} />
         ))}
       </div>
       <p>Fill in the form to calculate your net balance</p>
@@ -25,66 +28,108 @@ function EmptyState() {
   );
 }
 
+/* ── Main result display ── */
 function ResultDisplay({ result, onCopy, copied }) {
+  const isReverse = result.mode === 'reverse';
+
   return (
     <div className="result-inner fade-in">
-      <p className="net-label">Net Balance After Tax</p>
+      {/* Big number */}
+      <p className="net-label">
+        {isReverse ? 'Required Recharge Amount' : 'Net Balance After Tax'}
+      </p>
       <div className="balance-row">
-        <span className="big-balance">{result.net.toFixed(2)}</span>
+        <span className="big-balance">
+          Rs.&nbsp;{isReverse ? result.amount.toFixed(2) : result.net.toFixed(2)}
+        </span>
         <button
           className="copy-btn"
           onClick={onCopy}
           title="Copy to clipboard"
-          aria-label="Copy balance"
+          aria-label="Copy result"
         >
           {copied ? '✅' : '📋'}
         </button>
       </div>
+      {copied && <span className="copied-toast">Copied!</span>}
 
+      {/* Breakdown */}
       <div className="breakdown">
-        <div className="bd-row">
-          <span>Recharge Amount:</span>
-          <strong className="bd-val">Rs. {result.amount.toFixed(2)}</strong>
-        </div>
-        <div className="bd-row tax">
-          <span>FED Tax (13.5%):</span>
-          <strong className="bd-val">- Rs. {result.tax.toFixed(2)}</strong>
-        </div>
-        <hr className="bd-hr" />
-        <div className="bd-row carrier">
-          <span>Carrier:</span>
-          <strong className="bd-val">{result.carrier}</strong>
-        </div>
+        {isReverse ? (
+          <>
+            <div className="bd-row">
+              <span>Desired Net Balance:</span>
+              <strong className="bd-val">Rs. {result.net.toFixed(2)}</strong>
+            </div>
+            <div className="bd-row tax">
+              <span>FED Tax (13.5%):</span>
+              <strong className="bd-val">+ Rs. {result.tax.toFixed(2)}</strong>
+            </div>
+            <hr className="bd-hr" />
+            <div className="bd-row total">
+              <span>Recharge Needed:</span>
+              <strong className="bd-val">Rs. {result.amount.toFixed(2)}</strong>
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="bd-row">
+              <span>Recharge Amount:</span>
+              <strong className="bd-val">Rs. {result.amount.toFixed(2)}</strong>
+            </div>
+            <div className="bd-row tax">
+              <span>FED Tax (13.5%):</span>
+              <strong className="bd-val">− Rs. {result.tax.toFixed(2)}</strong>
+            </div>
+            <hr className="bd-hr" />
+            <div className="bd-row total">
+              <span>Net Balance:</span>
+              <strong className="bd-val">Rs. {result.net.toFixed(2)}</strong>
+            </div>
+          </>
+        )}
+        {result.carrier && result.carrier !== 'Unknown' && (
+          <div className="bd-row carrier">
+            <span>Carrier:</span>
+            <strong className="bd-val">
+              {CARRIER_EMOJI[result.carrier] ?? '📡'} {result.carrier}
+            </strong>
+          </div>
+        )}
       </div>
     </div>
   );
 }
 
+/* ── ResultCard ── */
 function ResultCard({ result }) {
-  const [showSkeleton, setShowSkeleton] = useState(false);
-  const [showResult, setShowResult] = useState(false);
+  const [showSkeleton,  setShowSkeleton]  = useState(false);
+  const [showResult,    setShowResult]    = useState(false);
   const [currentResult, setCurrentResult] = useState(null);
-  const [copied, setCopied] = useState(false);
+  const [copied,        setCopied]        = useState(false);
 
   useEffect(() => {
     if (!result) return;
     setShowResult(false);
     setShowSkeleton(true);
-
-    const timer = setTimeout(() => {
+    const t = setTimeout(() => {
       setCurrentResult(result);
       setShowSkeleton(false);
       setShowResult(true);
-    }, 850);
-
-    return () => clearTimeout(timer);
+    }, 900);
+    return () => clearTimeout(t);
   }, [result]);
 
   const handleCopy = () => {
     if (!currentResult) return;
-    navigator.clipboard.writeText(currentResult.net.toFixed(2)).then(() => {
+    const isReverse = currentResult.mode === 'reverse';
+    const text = isReverse
+      ? `Required Recharge: Rs. ${currentResult.amount.toFixed(2)}\nFED Tax: Rs. ${currentResult.tax.toFixed(2)}\nDesired Balance: Rs. ${currentResult.net.toFixed(2)}`
+      : `Net Balance: Rs. ${currentResult.net.toFixed(2)}\nFED Tax: Rs. ${currentResult.tax.toFixed(2)}\nRecharge: Rs. ${currentResult.amount.toFixed(2)}`;
+    navigator.clipboard.writeText(text).then(() => {
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      if (navigator.vibrate) navigator.vibrate([40, 20, 40]);
+      setTimeout(() => setCopied(false), 2200);
     });
   };
 
