@@ -62,7 +62,7 @@ function ResultDisplay({ result, onCopy, copied }) {
               <strong className="bd-val">Rs. {result.net.toFixed(2)}</strong>
             </div>
             <div className="bd-row tax">
-              <span>FED Tax (13.5%):</span>
+              <span>WHT (15% on net):</span>
               <strong className="bd-val">+ Rs. {result.tax.toFixed(2)}</strong>
             </div>
             <hr className="bd-hr" />
@@ -78,7 +78,7 @@ function ResultDisplay({ result, onCopy, copied }) {
               <strong className="bd-val">Rs. {result.amount.toFixed(2)}</strong>
             </div>
             <div className="bd-row tax">
-              <span>FED Tax (13.5%):</span>
+              <span>WHT (15% on net):</span>
               <strong className="bd-val">− Rs. {result.tax.toFixed(2)}</strong>
             </div>
             <hr className="bd-hr" />
@@ -124,8 +124,8 @@ function ResultCard({ result }) {
     if (!currentResult) return;
     const isReverse = currentResult.mode === 'reverse';
     const text = isReverse
-      ? `Required Recharge: Rs. ${currentResult.amount.toFixed(2)}\nFED Tax: Rs. ${currentResult.tax.toFixed(2)}\nDesired Balance: Rs. ${currentResult.net.toFixed(2)}`
-      : `Net Balance: Rs. ${currentResult.net.toFixed(2)}\nFED Tax: Rs. ${currentResult.tax.toFixed(2)}\nRecharge: Rs. ${currentResult.amount.toFixed(2)}`;
+      ? `Required Recharge: Rs. ${currentResult.amount.toFixed(2)}\nWHT: Rs. ${currentResult.tax.toFixed(2)}\nDesired Balance: Rs. ${currentResult.net.toFixed(2)}`
+      : `Net Balance: Rs. ${currentResult.net.toFixed(2)}\nWHT: Rs. ${currentResult.tax.toFixed(2)}\nRecharge: Rs. ${currentResult.amount.toFixed(2)}`;
     navigator.clipboard.writeText(text).then(() => {
       setCopied(true);
       if (navigator.vibrate) navigator.vibrate([40, 20, 40]);

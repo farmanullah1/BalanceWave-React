@@ -4,7 +4,7 @@ import { CarrierLogo } from '../utils/CarrierLogos';
 import './CalculatorForm.css';
 
 const CARRIERS = ['Jazz', 'Zong', 'Telenor', 'Ufone', 'Onic', 'SCOm'];
-const FED_TAX_RATE = 0.135;
+const WHT_RATE = 0.15; // 15% tax on the net balance
 
 function CalculatorForm({ onCalculate }) {
   const [mobile,   setMobile]   = useState('');
@@ -50,13 +50,13 @@ function CalculatorForm({ onCalculate }) {
       const amt = parseFloat(amount);
       const resolvedCarrier = carrier || 'Unknown';
       if (mode === 'forward') {
-        const tax = amt * FED_TAX_RATE;
-        const net = amt - tax;
+        const net = amt / (1 + WHT_RATE);
+        const tax = amt - net;
         onCalculate({ mobile, carrier: resolvedCarrier, amount: amt, tax, net, mode: 'forward' });
       } else {
         // Reverse: user wants 'amt' in account — how much to recharge?
-        const required = amt / (1 - FED_TAX_RATE);
-        const tax      = required * FED_TAX_RATE;
+        const required = amt * (1 + WHT_RATE);
+        const tax      = required - amt;
         onCalculate({ mobile, carrier: resolvedCarrier, amount: required, tax, net: amt, desiredNet: amt, mode: 'reverse' });
       }
       setLoading(false);
@@ -145,14 +145,14 @@ function CalculatorForm({ onCalculate }) {
                 setAmount(e.target.value);
                 if (errors.amount) setErrors(p => ({ ...p, amount: '' }));
               }}
-              placeholder={mode === 'forward' ? '100' : '86.5'}
+              placeholder={mode === 'forward' ? '100' : '86.96'}
               inputMode="decimal"
             />
           </div>
           {errors.amount && <p className="err-msg">{errors.amount}</p>}
           {mode === 'reverse' && (
             <p className="hint-msg">
-              We'll calculate the recharge needed to get this amount after 13.5% FED tax.
+              We'll calculate the recharge needed to get this amount after 15% WHT (inclusive).
             </p>
           )}
         </div>

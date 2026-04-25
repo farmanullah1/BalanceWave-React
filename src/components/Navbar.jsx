@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Palette, Moon, Sun, Briefcase } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Palette, Moon, Sun, Briefcase, ExternalLink } from 'lucide-react';
 import './Navbar.css';
 
 const SKINS = [
@@ -16,71 +17,101 @@ function Navbar({ theme, onToggleTheme, skin, onChangeSkin }) {
     <nav className="navbar">
       <div className="navbar-inner">
         {/* Brand */}
-        <a href="/" className="brand" aria-label="BalanceWave home">
-          <svg className="brand-logo" viewBox="0 0 100 100" width="28" height="28" xmlns="http://www.w3.org/2000/svg">
+        <motion.a 
+          href="/" 
+          className="brand" 
+          aria-label="BalanceWave home"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+        >
+          <svg className="brand-logo" viewBox="0 0 100 100" width="32" height="32" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <linearGradient id="navGrad" x1="0%" y1="0%" x2="100%" y2="100%">
                 <stop offset="0%" stopColor="var(--grad-from)" />
                 <stop offset="100%" stopColor="var(--grad-to)" />
               </linearGradient>
             </defs>
-            <rect width="100" height="100" rx="20" fill="url(#navGrad)" />
-            <path d="M10 55 Q 30 25, 50 55 T 90 55" fill="none" stroke="white" strokeWidth="8" strokeLinecap="round" />
-            <path d="M10 70 Q 30 40, 50 70 T 90 70" fill="none" stroke="rgba(255,255,255,0.6)" strokeWidth="8" strokeLinecap="round" />
-            <circle cx="50" cy="25" r="8" fill="white" />
+            <rect width="100" height="100" rx="24" fill="url(#navGrad)" />
+            <path d="M20 50 C 35 20, 65 80, 80 50" fill="none" stroke="white" strokeWidth="8" strokeLinecap="round" />
+            <path d="M20 65 C 35 35, 65 95, 80 65" fill="none" stroke="rgba(255,255,255,0.4)" strokeWidth="6" strokeLinecap="round" />
+            <circle cx="50" cy="25" r="7" fill="white" />
           </svg>
           <span className="brand-text">BalanceWave</span>
-        </a>
+        </motion.a>
 
         {/* Right-side controls */}
         <div className="nav-right">
           {/* Portfolio link */}
-          <a
+          <motion.a
             href="https://farmanullah1.github.io/My-Portfolio/"
             target="_blank"
             rel="noopener noreferrer"
             className="portfolio-link"
             title="Farmanullah's Portfolio"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            whileHover={{ y: -2, scale: 1.05 }}
           >
-            <span className="port-icon"><Briefcase size={16} /></span>
+            <Briefcase size={16} />
             <span className="port-text">Portfolio</span>
-          </a>
+            <ExternalLink size={12} className="ext-icon" />
+          </motion.a>
+
+          <div className="v-divider" />
 
           {/* Skin picker */}
           <div className="skin-wrap">
-            <button
+            <motion.button
               className="skin-toggle"
               onClick={() => setSkinOpen(o => !o)}
               title="Change color theme"
               aria-expanded={skinOpen}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
             >
               <Palette size={18} />
-            </button>
-            {skinOpen && (
-              <div className="skin-panel" role="menu">
-                {SKINS.map(s => (
-                  <button
-                    key={s.id}
-                    className={`skin-dot ${skin === s.id ? 'active' : ''}`}
-                    style={{ background: s.color }}
-                    onClick={() => { onChangeSkin(s.id); setSkinOpen(false); }}
-                    title={s.label}
-                    aria-label={`${s.label} skin`}
-                  />
-                ))}
-              </div>
-            )}
+            </motion.button>
+            
+            <AnimatePresence>
+              {skinOpen && (
+                <motion.div 
+                  className="skin-panel" 
+                  role="menu"
+                  initial={{ opacity: 0, scale: 0.8, y: 10 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.8, y: 10 }}
+                >
+                  {SKINS.map(s => (
+                    <motion.button
+                      key={s.id}
+                      className={`skin-dot ${skin === s.id ? 'active' : ''}`}
+                      style={{ background: s.color }}
+                      onClick={() => { onChangeSkin(s.id); setSkinOpen(false); }}
+                      title={s.label}
+                      aria-label={`${s.label} skin`}
+                      whileHover={{ scale: 1.25 }}
+                      whileTap={{ scale: 0.9 }}
+                    />
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
           {/* Dark mode toggle */}
-          <button
+          <motion.button
             className="theme-btn"
             onClick={onToggleTheme}
             title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
             aria-label="Toggle theme"
+            whileHover={{ scale: 1.1, rotate: theme === 'dark' ? 180 : 0 }}
+            whileTap={{ scale: 0.9 }}
           >
             {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
-          </button>
+          </motion.button>
         </div>
       </div>
     </nav>

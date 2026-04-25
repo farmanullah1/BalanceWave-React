@@ -3,14 +3,15 @@
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--border);
-  padding: 0.85rem 1.5rem;
+  padding: 0.75rem 1.5rem;
   position: sticky;
   top: 0;
   z-index: 100;
+  transition: background 0.3s, border-color 0.3s;
 }
 
 .navbar-inner {
-  max-width: 980px;
+  max-width: 1000px;
   margin: 0 auto;
   display: flex;
   align-items: center;
@@ -20,55 +21,68 @@
 .brand {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
   text-decoration: none;
 }
 
 .brand-text {
   font-family: 'Syne', sans-serif;
   font-weight: 800;
-  font-size: 1.35rem;
+  font-size: 1.4rem;
   background: linear-gradient(120deg, var(--grad-from), var(--grad-to));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  letter-spacing: -0.5px;
+  letter-spacing: -0.6px;
 }
 
 .nav-right {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
+  gap: 0.75rem;
+}
+
+.v-divider {
+  width: 1px;
+  height: 20px;
+  background: var(--border);
+  margin: 0 4px;
 }
 
 /* Portfolio link */
 .portfolio-link {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 6px;
   text-decoration: none;
   background: var(--bg);
+  border: 1px solid var(--border);
   border-radius: 20px;
   padding: 6px 14px;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 0.8rem;
-  font-weight: 500;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
   color: var(--text);
-  box-shadow: 2px 2px 6px var(--sdark), -2px -2px 6px var(--slight);
-  transition: all 0.25s ease;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.portfolio-link:hover {
-  color: var(--accent);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.12);
-}
-.port-icon { font-size: 0.85rem; }
 
-@media (max-width: 500px) {
-  .port-text { display: none; }
-  .portfolio-link { padding: 6px 10px; }
-  .brand-text { font-size: 1.15rem; }
-  .brand-logo { width: 24px; height: 24px; }
+.ext-icon {
+  opacity: 0.5;
+  margin-left: 2px;
+}
+
+.portfolio-link:hover {
+  background: var(--surface);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+@media (max-width: 600px) {
+  .port-text, .ext-icon, .v-divider { display: none; }
+  .portfolio-link { padding: 8px; border-radius: 50%; }
+  .brand-text { font-size: 1.2rem; }
+  .navbar { padding: 0.6rem 1rem; }
 }
 
 /* Skin picker */
@@ -76,66 +90,62 @@
 
 .skin-toggle {
   background: var(--bg);
-  border: none;
+  border: 1px solid var(--border);
   border-radius: 50%;
-  width: 36px;
-  height: 36px;
+  width: 38px;
+  height: 38px;
   cursor: pointer;
-  font-size: 15px;
-  box-shadow: 2px 2px 6px var(--sdark), -2px -2px 6px var(--slight);
+  box-shadow: var(--shadow-sm);
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease;
   color: var(--text);
+  transition: all 0.2s;
 }
-.skin-toggle:hover { transform: scale(1.08); }
 
 .skin-panel {
   position: absolute;
-  top: calc(100% + 8px);
+  top: calc(100% + 12px);
   right: 0;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 10px 12px;
+  border-radius: 16px;
+  padding: 12px;
   display: flex;
-  gap: 8px;
-  box-shadow: 0 12px 40px rgba(0,0,0,0.14);
-  animation: pop 0.18s ease both;
+  gap: 10px;
+  box-shadow: 0 10px 30px -10px rgba(0,0,0,0.2);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
+  z-index: 101;
 }
 
 .skin-dot {
-  width: 24px;
-  height: 24px;
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
   border: 2px solid transparent;
   cursor: pointer;
-  transition: transform 0.2s ease, border-color 0.2s ease;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
-.skin-dot:hover { transform: scale(1.2); }
+
 .skin-dot.active {
   border-color: var(--text);
-  transform: scale(1.15);
+  transform: scale(1.1);
 }
 
 /* Dark toggle */
 .theme-btn {
   background: var(--bg);
-  border: none;
+  border: 1px solid var(--border);
   border-radius: 50%;
-  width: 36px;
-  height: 36px;
+  width: 38px;
+  height: 38px;
   cursor: pointer;
-  font-size: 15px;
-  box-shadow: 2px 2px 6px var(--sdark), -2px -2px 6px var(--slight);
+  box-shadow: var(--shadow-sm);
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease;
   color: var(--text);
+  transition: all 0.2s;
 }
-.theme-btn:hover { transform: scale(1.08); }
+
