@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { CARRIER_EMOJI } from '../utils/carriers';
+import { Copy, CheckCircle } from 'lucide-react';
+import { CarrierLogo } from '../utils/CarrierLogos';
 import './ResultCard.css';
 
 /* ── Skeleton ── */
@@ -48,7 +49,7 @@ function ResultDisplay({ result, onCopy, copied }) {
           title="Copy to clipboard"
           aria-label="Copy result"
         >
-          {copied ? '✅' : '📋'}
+          {copied ? <CheckCircle size={18} className="success-icon" /> : <Copy size={18} />}
         </button>
       </div>
       {copied && <span className="copied-toast">Copied!</span>}
@@ -92,7 +93,7 @@ function ResultDisplay({ result, onCopy, copied }) {
           <div className="bd-row carrier">
             <span>Carrier:</span>
             <strong className="bd-val">
-              {CARRIER_EMOJI[result.carrier] ?? '📡'} {result.carrier}
+              <CarrierLogo carrier={result.carrier} size={18} /> <span>{result.carrier}</span>
             </strong>
           </div>
         )}

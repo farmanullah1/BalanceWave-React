@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Smartphone, Zap, Target, Wallet } from 'lucide-react';
 import { detectCarrier } from '../utils/carriers';
 import { CarrierLogo } from '../utils/CarrierLogos';
 import './CalculatorForm.css';
@@ -72,14 +73,14 @@ function CalculatorForm({ onCalculate }) {
           className={`mode-btn ${mode === 'forward' ? 'active' : ''}`}
           onClick={() => setMode('forward')}
         >
-          ⚡ Recharge → Balance
+          <Zap size={14} /> <span>Recharge → Balance</span>
         </button>
         <button
           type="button"
           className={`mode-btn ${mode === 'reverse' ? 'active' : ''}`}
           onClick={() => setMode('reverse')}
         >
-          🎯 Target Balance
+          <Target size={14} /> <span>Target Balance</span>
         </button>
       </div>
 
@@ -87,7 +88,7 @@ function CalculatorForm({ onCalculate }) {
         {/* Mobile Number (optional) */}
         <div className="field">
           <label className="field-label" htmlFor="mobile">
-            Mobile Number <span className="optional">(optional)</span>
+            <Smartphone size={14} /> <span>Mobile Number</span> <span className="optional">(optional)</span>
           </label>
           <input
             id="mobile"
@@ -130,7 +131,7 @@ function CalculatorForm({ onCalculate }) {
         {/* Amount */}
         <div className="field">
           <label className="field-label" htmlFor="amount">
-            {mode === 'forward' ? 'Recharge Amount' : 'Desired Balance in Account'}
+            <Wallet size={14} /> <span>{mode === 'forward' ? 'Recharge Amount' : 'Desired Balance'}</span>
           </label>
           <div className="amt-wrap">
             <span className="amt-prefix">Rs.</span>
@@ -165,8 +166,8 @@ function CalculatorForm({ onCalculate }) {
           {loading
             ? <span className="loading-dots">Processing<span>.</span><span>.</span><span>.</span></span>
             : mode === 'forward'
-              ? '⚡ Calculate Balance'
-              : '🎯 Calculate Recharge'
+              ? <><Zap size={18} /> <span>Calculate Balance</span></>
+              : <><Target size={18} /> <span>Calculate Recharge</span></>
           }
         </button>
       </form>

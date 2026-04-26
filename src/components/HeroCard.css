@@ -5,6 +5,23 @@
   padding-right: 0.5rem;
 }
 
+.hero-icon-wrap {
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+.hero-icon {
+  color: var(--wave);
+  filter: drop-shadow(0 0 8px var(--wave-op));
+  animation: pulse-icon 3s ease-in-out infinite;
+}
+
+@keyframes pulse-icon {
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.1); opacity: 1; }
+}
+
 .hero-title {
   font-family: 'Syne', sans-serif;
   font-size: clamp(1.8rem, 8vw, 3.2rem);

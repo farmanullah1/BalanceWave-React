@@ -1,4 +1,4 @@
-import React from 'react';
+import { Logo } from './Logo';
 import './HeroCard.css';
 
 const BARS = [8,14,22,28,36,28,22,14,8,16,24,16,8];
@@ -6,6 +6,9 @@ const BARS = [8,14,22,28,36,28,22,14,8,16,24,16,8];
 function HeroCard() {
   return (
     <div className="glass-card hero-card fade-in">
+      <div className="hero-icon-wrap">
+        <Logo size={48} className="hero-icon" />
+      </div>
       <h1 className="hero-title">BalanceWave</h1>
       <p className="hero-sub">Smart SIM balance calculation for Pakistan</p>
       <div className="wave-line" aria-hidden="true">

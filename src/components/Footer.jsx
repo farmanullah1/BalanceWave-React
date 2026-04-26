@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Briefcase, ArrowUp, Mail, Globe, Code } from 'lucide-react';
+import { Logo } from './Logo';
 
 // Custom Brand Icons to avoid build errors with lucide-react brand icons
 const Github = ({ size = 20 }) => (
@@ -34,7 +35,7 @@ function Footer() {
             viewport={{ once: true }}
           >
             <div className="f-logo">
-              <span className="logo-icon">〰️</span>
+              <Logo size={24} className="f-logo-icon" />
               <span className="logo-text">BalanceWave</span>
             </div>
             <p className="f-desc">
